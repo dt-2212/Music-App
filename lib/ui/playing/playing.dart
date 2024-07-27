@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,16 +40,25 @@ class _NowPlayingPageState extends State<NowPlayingPage>
   late AudioPlayerManager _audioPlayerManager;
   late int _selectedIndex;
   late Song _song;
+  late double _currentAnimation;
+  bool _shuffle=false;
+  late LoopMode _loopMode;
+
+
+
+
+
 
   @override
   void initState() {
     super.initState();
+    _currentAnimation = 0.0;
     _song = widget.playingSong;
     _imageAnimController = AnimationController(vsync: this, duration: const Duration(milliseconds: 12000));
     _audioPlayerManager = AudioPlayerManager(songUrl: _song.source);
     _audioPlayerManager.init();
     _selectedIndex = widget.songs.indexOf(widget.playingSong);
-
+    _loopMode = LoopMode.off;
   }
 
   @override
@@ -167,6 +178,7 @@ class _NowPlayingPageState extends State<NowPlayingPage>
   @override
   void dispose() {
     _audioPlayerManager.dispose();
+    _imageAnimController.dispose();
     super.dispose();
   }
 
@@ -175,10 +187,10 @@ class _NowPlayingPageState extends State<NowPlayingPage>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          const MediaButtonControl(
-              function: null,
+          MediaButtonControl(
+              function: _setShuffle,
               icon: Icons.shuffle,
-              color: Colors.deepPurple,
+              color: _getShuffleColor(),
               size: 24),
           MediaButtonControl(
               function: _setPrevSong,
@@ -197,10 +209,10 @@ class _NowPlayingPageState extends State<NowPlayingPage>
               icon: Icons.skip_next,
               color: Colors.deepPurple,
               size: 36),
-          const MediaButtonControl(
-              function: null,
-              icon: Icons.repeat,
-              color: Colors.deepPurple,
+          MediaButtonControl(
+              function: _setRepeat,
+              icon: _repeatIcon(),
+              color: _getRepeatIconColor(),
               size: 24),
         ],
       ),
@@ -241,6 +253,7 @@ class _NowPlayingPageState extends State<NowPlayingPage>
         final playing = playState?.playing;
         if (processingState == ProcessingState.loading ||
             processingState == ProcessingState.buffering) {
+          _pauseAnim();
           return Container(
             margin: const EdgeInsets.all(8),
             width: 48,
@@ -250,22 +263,30 @@ class _NowPlayingPageState extends State<NowPlayingPage>
         } else if (playing != true) {
           return MediaButtonControl(
               function: () {
+                // start or resume animation
                 _audioPlayerManager.player.play();
               },
               icon: Icons.play_arrow,
               color: null,
               size: 48);
         } else if (processingState != ProcessingState.completed) {
+          _playAnim();
           return MediaButtonControl(
               function: () {
                 _audioPlayerManager.player.pause();
+                _pauseAnim();
               },
               icon: Icons.pause,
               color: null,
               size: 48);
         } else {
+          if(processingState == ProcessingState.completed){
+            _stopAnim();
+            _resetAnim();
+          }
           return MediaButtonControl(
               function: () {
+                _resetAnim();
                 _audioPlayerManager.player.seek(Duration.zero);
               },
               icon: Icons.replay,
@@ -276,24 +297,107 @@ class _NowPlayingPageState extends State<NowPlayingPage>
     );
   }
 
-
-  //Trien khai chuc nang next bai hat
+//============================================================================== Tiến/lùi bài hát
   void _setNextSong(){
-    ++ _selectedIndex;
+    if(_shuffle){
+      var random = Random();
+      _selectedIndex = random.nextInt(widget.songs.length);
+    } else if(_selectedIndex < widget.songs.length-1) {
+      ++ _selectedIndex;
+    } else if (_loopMode == LoopMode.all && _selectedIndex == widget.songs.length-1){
+      _selectedIndex = 0;
+    }
+    if(_selectedIndex >= widget.songs.length){
+      _selectedIndex = _selectedIndex%widget.songs.length;
+    }
     final nextSong = widget.songs[_selectedIndex];
     _audioPlayerManager.updateSongUrl(nextSong.source);
     setState(() {
       _song= nextSong;
     });
+  _resetAnim();
   }
+
+
   void _setPrevSong(){
-    -- _selectedIndex;
+    if(_shuffle){
+      var random = Random();
+      _selectedIndex = random.nextInt(widget.songs.length);
+    } else if (_selectedIndex > 0) {
+      -- _selectedIndex;
+    } else if (_loopMode == LoopMode.all && _selectedIndex == 0){
+      _selectedIndex = widget.songs.length-1;
+    }
+    if(_selectedIndex < 0){
+      _selectedIndex = (-1*_selectedIndex)%widget.songs.length;
+    }
     final nextSong = widget.songs[_selectedIndex];
     _audioPlayerManager.updateSongUrl(nextSong.source);
     setState(() {
       _song= nextSong;
     });
+  _resetAnim();
   }
+//==============================================================================
+  void _playAnim(){    //  hàm chạy animation
+    _imageAnimController.forward(from: _currentAnimation);
+    _imageAnimController.repeat();
+  }
+  void _pauseAnim(){   //  dừng animation
+    _stopAnim();
+    _currentAnimation = _imageAnimController.value;
+  }
+  void _stopAnim(){
+    _imageAnimController.stop();
+  }
+  void _resetAnim(){
+    _currentAnimation = 0.0;
+    _imageAnimController.value = _currentAnimation;
+  }
+//============================================================================== Random bài hát
+  void _setShuffle(){
+    setState(() {
+      _shuffle = !_shuffle;
+    });
+  }
+  Color? _getShuffleColor(){
+    return _shuffle ? Colors.deepPurple : Colors.grey;
+  }
+//============================================================================== Lặp bài hát
+
+  void _setRepeat(){
+      if(_loopMode == LoopMode.off){
+        _loopMode = LoopMode.one;
+      } else if(_loopMode == LoopMode.one){
+        _loopMode = LoopMode.all;
+      } else {
+        _loopMode = LoopMode.off;
+      }
+      setState(() {
+        _audioPlayerManager.player.setLoopMode(_loopMode);
+      });
+  }
+
+  IconData _repeatIcon() {
+    switch (_loopMode) {
+      case LoopMode.one:
+        return Icons.repeat_one;
+      case LoopMode.all:
+        return Icons.repeat_on;
+      default:
+        return Icons.repeat;
+    }
+  }
+
+
+  Color? _getRepeatIconColor(){
+    return _loopMode == LoopMode.off
+        ? Colors.grey
+        : Colors.deepPurple;
+  }
+//==============================================================================
+
+
 }
 
 class MediaButtonControl extends StatefulWidget {
