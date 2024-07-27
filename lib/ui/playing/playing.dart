@@ -215,6 +215,16 @@ class _NowPlayingPageState extends State<NowPlayingPage>
           return ProgressBar(
             progress: progress,
             total: total,
+            buffered: buffered,
+            onSeek: _audioPlayerManager.player.seek,
+            barHeight: 5.0,
+            barCapShape: BarCapShape.round,
+            baseBarColor: Colors.grey.withOpacity(0.3),
+            progressBarColor: Colors.blue,
+            bufferedBarColor: Colors.grey.withOpacity(0.3),
+            thumbColor: Colors.deepPurple,
+            thumbGlowColor: Colors.blueGrey.withOpacity(0.3),
+            thumbRadius: 10.0,
           );
         });
   }
