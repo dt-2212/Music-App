@@ -36,15 +36,18 @@ class _NowPlayingPageState extends State<NowPlayingPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _imageAnimController;
   late AudioPlayerManager _audioPlayerManager;
+  late int _selectedIndex;
+  late Song _song;
 
   @override
   void initState() {
     super.initState();
-    _imageAnimController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 12000));
-    _audioPlayerManager =
-        AudioPlayerManager(songUrl: widget.playingSong.source);
+    _song = widget.playingSong;
+    _imageAnimController = AnimationController(vsync: this, duration: const Duration(milliseconds: 12000));
+    _audioPlayerManager = AudioPlayerManager(songUrl: _song.source);
     _audioPlayerManager.init();
+    _selectedIndex = widget.songs.indexOf(widget.playingSong);
+
   }
 
   @override
@@ -71,7 +74,7 @@ class _NowPlayingPageState extends State<NowPlayingPage>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(widget.playingSong.album),
+                Text(_song.album),
                 const SizedBox(
                   height: 16,
                 ),
@@ -86,7 +89,7 @@ class _NowPlayingPageState extends State<NowPlayingPage>
                     borderRadius: BorderRadius.circular(radius),
                     child: FadeInImage.assetNetwork(
                       placeholder: 'assets/music.png',
-                      image: widget.playingSong.image,
+                      image: _song.image,
                       width: screenWidth - delta,
                       height: screenWidth - delta,
                       imageErrorBuilder: (context, error, stackTrace) {
@@ -112,12 +115,12 @@ class _NowPlayingPageState extends State<NowPlayingPage>
                         ),
                         Column(
                           children: [
-                            Text(widget.playingSong.title),
+                            Text(_song.title),
                             const SizedBox(
                               height: 8,
                             ),
                             Text(
-                              widget.playingSong.artist,
+                              _song.artist,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
@@ -177,8 +180,8 @@ class _NowPlayingPageState extends State<NowPlayingPage>
               icon: Icons.shuffle,
               color: Colors.deepPurple,
               size: 24),
-          const MediaButtonControl(
-              function: null,
+          MediaButtonControl(
+              function: _setPrevSong,
               icon: Icons.skip_previous,
               color: Colors.deepPurple,
               size: 36),
@@ -189,8 +192,8 @@ class _NowPlayingPageState extends State<NowPlayingPage>
           //     size: 48,),
           _playButton(),
 
-          const MediaButtonControl(
-              function: null,
+          MediaButtonControl(
+              function: _setNextSong,
               icon: Icons.skip_next,
               color: Colors.deepPurple,
               size: 36),
@@ -271,6 +274,25 @@ class _NowPlayingPageState extends State<NowPlayingPage>
         }
       },
     );
+  }
+
+
+  //Trien khai chuc nang next bai hat
+  void _setNextSong(){
+    ++ _selectedIndex;
+    final nextSong = widget.songs[_selectedIndex];
+    _audioPlayerManager.updateSongUrl(nextSong.source);
+    setState(() {
+      _song= nextSong;
+    });
+  }
+  void _setPrevSong(){
+    -- _selectedIndex;
+    final nextSong = widget.songs[_selectedIndex];
+    _audioPlayerManager.updateSongUrl(nextSong.source);
+    setState(() {
+      _song= nextSong;
+    });
   }
 }
 
