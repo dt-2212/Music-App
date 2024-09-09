@@ -9,6 +9,7 @@ import '../../data/model/song.dart';
 import '../playing/playing.dart';
 
 class MusicApp extends StatelessWidget {
+
   const MusicApp({super.key});
 
   @override

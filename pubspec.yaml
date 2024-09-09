@@ -39,7 +39,7 @@ dependencies:
   just_audio: ^0.9.37
   rxdart: ^0.28.0
   audio_video_progress_bar: ^2.0.3
-
+  flutter_screenutil: ^5.9.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -65,3 +65,4 @@ flutter:
   assets:
     - assets/songs.json
     - assets/music.png
+    - assets/images/
