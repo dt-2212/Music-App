@@ -1,9 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:music_app/ui/login/login_screen.dart';
+import 'package:music_app/ui/go_router.dart';
 
-void main (){
-  runApp(const MaterialApp(
-    home: LoginScreen(),
-  ));
+void main() {
+  runApp(const MusicApp());
+}
+class MusicApp extends StatelessWidget {
+
+  const MusicApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routerConfig: appRouter(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigoAccent),
+        useMaterial3: true,
+      ),
+      debugShowCheckedModeBanner: false,
+    );
+  }
 }

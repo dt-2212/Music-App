@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/ui/home/home.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,10 +24,10 @@ class _LoginScreenState extends State<LoginScreen> {
             height: MediaQuery.of(context).size.height,
             child: SingleChildScrollView(
                 child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
+              padding: const EdgeInsets.only(left: 27, right: 27, top: 10),
               child: Column(
                 children: [
-                  const SizedBox(height: 60),
+                  const SizedBox(height: 50),
                   Image.asset('assets/images/logo.png'),
                   const SizedBox(height: 80),
                   TextField(
@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           gradient: const LinearGradient(
-                              colors: [Colors.blueAccent, Colors.purple],
+                              colors: [Colors.blue, Colors.purple],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight),
                           boxShadow: [
@@ -91,10 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ]),
                       child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const MusicApp()),
-                            );
+                            context.go('/app');
                           },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.all(15.0),
