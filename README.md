@@ -1,4 +1,3 @@
-
-![screenshot_login.png](assets%2Fimg_readme%2Fscreenshot_login.png)
-![screenshot_hometab.png](assets%2Fimg_readme%2Fscreenshot_hometab.png)
-![screenshot_playing.png](assets%2Fimg_readme%2Fscreenshot_playing.png)
+![login_sc.png](assets%2Fimg_readme%2Flogin_sc.png)
+![home_sc.png](assets%2Fimg_readme%2Fhome_sc.png)
+![playing_sc.png](assets%2Fimg_readme%2Fplaying_sc.png)
