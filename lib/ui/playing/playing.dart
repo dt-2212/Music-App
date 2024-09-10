@@ -24,8 +24,7 @@ class NowPlaying extends StatelessWidget {
 }
 
 class NowPlayingPage extends StatefulWidget {
-  const NowPlayingPage(
-      {super.key, required this.songs, required this.playingSong});
+  const NowPlayingPage({super.key, required this.songs, required this.playingSong});
 
   final Song playingSong;
   final List<Song> songs;
@@ -41,20 +40,16 @@ class _NowPlayingPageState extends State<NowPlayingPage>
   late int _selectedIndex;
   late Song _song;
   late double _currentAnimation;
-  bool _shuffle=false;
+  bool _shuffle = false;
   late LoopMode _loopMode;
-
-
-
-
-
 
   @override
   void initState() {
     super.initState();
     _currentAnimation = 0.0;
     _song = widget.playingSong;
-    _imageAnimController = AnimationController(vsync: this, duration: const Duration(milliseconds: 12000));
+    _imageAnimController =
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 12000));
     _audioPlayerManager = AudioPlayerManager(songUrl: _song.source);
     _audioPlayerManager.init();
     _selectedIndex = widget.songs.indexOf(widget.playingSong);
@@ -63,17 +58,12 @@ class _NowPlayingPageState extends State<NowPlayingPage>
 
   @override
   Widget build(BuildContext context) {
-
-    // return const Scaffold(
-    //   body: Center(
-    //     child: Text('Now Playing'),
-    //   ),
-    // );
     final screenWidth = MediaQuery.of(context).size.width;
     const delta = 64;
     final radius = (screenWidth - delta) / 2;
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
+          padding: const EdgeInsetsDirectional.only(top: 10),
           middle: const Text('Now Playing'),
           trailing: IconButton(
             onPressed: () {},
@@ -86,16 +76,11 @@ class _NowPlayingPageState extends State<NowPlayingPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(_song.album),
-                const SizedBox(
-                  height: 16,
-                ),
+                const SizedBox(height: 16),
                 const Text('_ ___ _'),
-                const SizedBox(
-                  height: 48,
-                ),
+                const SizedBox(height: 48),
                 RotationTransition(
-                  turns:
-                      Tween(begin: 0.0, end: 1.0).animate(_imageAnimController),
+                  turns: Tween(begin: 0.0, end: 1.0).animate(_imageAnimController),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(radius),
                     child: FadeInImage.assetNetwork(
@@ -114,41 +99,31 @@ class _NowPlayingPageState extends State<NowPlayingPage>
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 64, bottom: 16),
+                  padding: const EdgeInsets.only(top: 60, bottom: 20),
                   child: SizedBox(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.share_outlined),
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                            onPressed: () {},
+                            icon: const Icon(Icons.share_outlined),
+                            color: Colors.deepPurple),
                         Column(
                           children: [
                             Text(_song.title),
-                            const SizedBox(
-                              height: 8,
-                            ),
+                            const SizedBox(height: 5),
                             Text(
                               _song.artist,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .color,
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Theme.of(context).textTheme.bodyMedium!.color,
                                   ),
                             ),
                           ],
                         ),
                         IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.favorite_outline),
-                          color: Theme.of(context).colorScheme.primary,
-                        )
+                            onPressed: () {},
+                            icon: const Icon(Icons.favorite_outline),
+                            color: Colors.deepPurple)
                       ],
                     ),
                   ),
@@ -197,13 +172,7 @@ class _NowPlayingPageState extends State<NowPlayingPage>
               icon: Icons.skip_previous,
               color: Colors.deepPurple,
               size: 36),
-          // const MediaButtonControl(
-          //     function: null,
-          //     icon: Icons.play_arrow_sharp,
-          //     color: Colors.deepPurple,
-          //     size: 48,),
           _playButton(),
-
           MediaButtonControl(
               function: _setNextSong,
               icon: Icons.skip_next,
@@ -267,7 +236,7 @@ class _NowPlayingPageState extends State<NowPlayingPage>
                 _audioPlayerManager.player.play();
               },
               icon: Icons.play_arrow,
-              color: null,
+              color: Colors.deepPurple,
               size: 48);
         } else if (processingState != ProcessingState.completed) {
           _playAnim();
@@ -277,10 +246,10 @@ class _NowPlayingPageState extends State<NowPlayingPage>
                 _pauseAnim();
               },
               icon: Icons.pause,
-              color: null,
+              color: Colors.deepPurple,
               size: 48);
         } else {
-          if(processingState == ProcessingState.completed){
+          if (processingState == ProcessingState.completed) {
             _stopAnim();
             _resetAnim();
           }
@@ -298,84 +267,92 @@ class _NowPlayingPageState extends State<NowPlayingPage>
   }
 
 //============================================================================== Tiến/lùi bài hát
-  void _setNextSong(){
-    if(_shuffle){
+  void _setNextSong() {
+    if (_shuffle) {
       var random = Random();
       _selectedIndex = random.nextInt(widget.songs.length);
-    } else if(_selectedIndex < widget.songs.length-1) {
-      ++ _selectedIndex;
-    } else if (_loopMode == LoopMode.all && _selectedIndex == widget.songs.length-1){
+    } else if (_selectedIndex < widget.songs.length - 1) {
+      ++_selectedIndex;
+    } else if (_loopMode == LoopMode.all && _selectedIndex == widget.songs.length - 1) {
       _selectedIndex = 0;
     }
-    if(_selectedIndex >= widget.songs.length){
-      _selectedIndex = _selectedIndex%widget.songs.length;
+    if (_selectedIndex >= widget.songs.length) {
+      _selectedIndex = _selectedIndex % widget.songs.length;
     }
     final nextSong = widget.songs[_selectedIndex];
     _audioPlayerManager.updateSongUrl(nextSong.source);
     setState(() {
-      _song= nextSong;
+      _song = nextSong;
     });
-  _resetAnim();
+    _resetAnim();
   }
 
-
-  void _setPrevSong(){
-    if(_shuffle){
+  void _setPrevSong() {
+    if (_shuffle) {
       var random = Random();
       _selectedIndex = random.nextInt(widget.songs.length);
     } else if (_selectedIndex > 0) {
-      -- _selectedIndex;
-    } else if (_loopMode == LoopMode.all && _selectedIndex == 0){
-      _selectedIndex = widget.songs.length-1;
+      --_selectedIndex;
+    } else if (_loopMode == LoopMode.all && _selectedIndex == 0) {
+      _selectedIndex = widget.songs.length - 1;
     }
-    if(_selectedIndex < 0){
-      _selectedIndex = (-1*_selectedIndex)%widget.songs.length;
+    if (_selectedIndex < 0) {
+      _selectedIndex = (-1 * _selectedIndex) % widget.songs.length;
     }
     final nextSong = widget.songs[_selectedIndex];
     _audioPlayerManager.updateSongUrl(nextSong.source);
     setState(() {
-      _song= nextSong;
+      _song = nextSong;
     });
-  _resetAnim();
+    _resetAnim();
   }
+
 //==============================================================================
-  void _playAnim(){    //  hàm chạy animation
+  void _playAnim() {
+    //  hàm chạy animation
     _imageAnimController.forward(from: _currentAnimation);
     _imageAnimController.repeat();
   }
-  void _pauseAnim(){   //  dừng animation
+
+  void _pauseAnim() {
+    //  dừng animation
     _stopAnim();
     _currentAnimation = _imageAnimController.value;
   }
-  void _stopAnim(){
+
+  void _stopAnim() {
     _imageAnimController.stop();
   }
-  void _resetAnim(){
+
+  void _resetAnim() {
     _currentAnimation = 0.0;
     _imageAnimController.value = _currentAnimation;
   }
+
 //============================================================================== Random bài hát
-  void _setShuffle(){
+  void _setShuffle() {
     setState(() {
       _shuffle = !_shuffle;
     });
   }
-  Color? _getShuffleColor(){
+
+  Color? _getShuffleColor() {
     return _shuffle ? Colors.deepPurple : Colors.grey;
   }
+
 //============================================================================== Lặp bài hát
 
-  void _setRepeat(){
-      if(_loopMode == LoopMode.off){
-        _loopMode = LoopMode.one;
-      } else if(_loopMode == LoopMode.one){
-        _loopMode = LoopMode.all;
-      } else {
-        _loopMode = LoopMode.off;
-      }
-      setState(() {
-        _audioPlayerManager.player.setLoopMode(_loopMode);
-      });
+  void _setRepeat() {
+    if (_loopMode == LoopMode.off) {
+      _loopMode = LoopMode.one;
+    } else if (_loopMode == LoopMode.one) {
+      _loopMode = LoopMode.all;
+    } else {
+      _loopMode = LoopMode.off;
+    }
+    setState(() {
+      _audioPlayerManager.player.setLoopMode(_loopMode);
+    });
   }
 
   IconData _repeatIcon() {
@@ -383,21 +360,16 @@ class _NowPlayingPageState extends State<NowPlayingPage>
       case LoopMode.one:
         return Icons.repeat_one;
       case LoopMode.all:
-        return Icons.repeat_on;
+        return Icons.repeat_on_outlined;
       default:
         return Icons.repeat;
     }
   }
 
-
-  Color? _getRepeatIconColor(){
-    return _loopMode == LoopMode.off
-        ? Colors.grey
-        : Colors.deepPurple;
+  Color? _getRepeatIconColor() {
+    return _loopMode == LoopMode.off ? Colors.grey : Colors.deepPurple;
   }
 //==============================================================================
-
-
 }
 
 class MediaButtonControl extends StatefulWidget {

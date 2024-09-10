@@ -4,23 +4,14 @@ import 'package:music_app/ui/home_tab/viewmodel.dart';
 import '../../data/model/song.dart';
 import '../playing/playing.dart';
 
-class HomeTab extends StatelessWidget {
+class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const SafeArea(child: HomeTabPage());
-  }
+  State<HomeTab> createState() => _HomeTabState();
 }
 
-class HomeTabPage extends StatefulWidget {
-  const HomeTabPage({super.key});
-
-  @override
-  State<HomeTabPage> createState() => _HomeTabPageState();
-}
-
-class _HomeTabPageState extends State<HomeTabPage> {
+class _HomeTabState extends State<HomeTab> {
   List<Song> songs = [];
   late MusicAppViewModel _viewModel;
 
@@ -33,16 +24,17 @@ class _HomeTabPageState extends State<HomeTabPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: getBody(),
-    );
-  }
-
-  @override
   void dispose() {
     _viewModel.songStream.close();
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: Scaffold(
+      body: getBody(),
+    ));
   }
 
   Widget getBody() {
@@ -79,10 +71,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
   }
 
   Widget getRow(int index) {
-    return _SongItemSection(
-      parent: this,
-      song: songs[index],
-    );
+    return _SongItemSection(parent: this, song: songs[index]);
   }
 
   void observeData() {
@@ -135,7 +124,7 @@ class _SongItemSection extends StatelessWidget {
     required this.song,
   });
 
-  final _HomeTabPageState parent;
+  final _HomeTabState parent;
   final Song song;
 
   @override

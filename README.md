@@ -1,2 +1,4 @@
-![img_2.png](assets/img_readme/img_2.png)
-![img_3.png](assets/img_readme/img_3.png)
+
+![screenshot_login.png](assets%2Fimg_readme%2Fscreenshot_login.png)
+![screenshot_hometab.png](assets%2Fimg_readme%2Fscreenshot_hometab.png)
+![screenshot_playing.png](assets%2Fimg_readme%2Fscreenshot_playing.png)
