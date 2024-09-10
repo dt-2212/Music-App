@@ -1,11 +1,9 @@
 import 'dart:math';
-
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_app/ui/playing/player_manager.dart';
-
 import '../../data/model/song.dart';
 
 class NowPlaying extends StatelessWidget {
@@ -63,8 +61,8 @@ class _NowPlayingPageState extends State<NowPlayingPage>
     final radius = (screenWidth - delta) / 2;
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          padding: const EdgeInsetsDirectional.only(top: 10),
-          middle: const Text('Now Playing'),
+          middle: const Text('Now Playing',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           trailing: IconButton(
             onPressed: () {},
             icon: const Icon(Icons.more_horiz),
@@ -75,10 +73,14 @@ class _NowPlayingPageState extends State<NowPlayingPage>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(_song.album),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
+                Text(
+                  _song.album,
+                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                ),
+                const SizedBox(height: 5),
                 const Text('_ ___ _'),
-                const SizedBox(height: 48),
+                const SizedBox(height: 60),
                 RotationTransition(
                   turns: Tween(begin: 0.0, end: 1.0).animate(_imageAnimController),
                   child: ClipRRect(
@@ -110,14 +112,13 @@ class _NowPlayingPageState extends State<NowPlayingPage>
                             color: Colors.deepPurple),
                         Column(
                           children: [
-                            Text(_song.title),
+                            Text(_song.title,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700, fontSize: 16)),
                             const SizedBox(height: 5),
-                            Text(
-                              _song.artist,
-                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: Theme.of(context).textTheme.bodyMedium!.color,
-                                  ),
-                            ),
+                            Text(_song.artist,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w400, fontSize: 14)),
                           ],
                         ),
                         IconButton(
@@ -129,19 +130,12 @@ class _NowPlayingPageState extends State<NowPlayingPage>
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                    top: 32,
-                    left: 24,
-                    right: 24,
-                    bottom: 16,
-                  ),
+                  padding:
+                      const EdgeInsets.only(top: 32, left: 24, right: 24, bottom: 16),
                   child: _progressBar(),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                    left: 24,
-                    right: 24,
-                  ),
+                  padding: const EdgeInsets.only(left: 24, right: 24),
                   child: _mediaButtons(),
                 ),
               ],
@@ -204,10 +198,10 @@ class _NowPlayingPageState extends State<NowPlayingPage>
             barHeight: 5.0,
             barCapShape: BarCapShape.round,
             baseBarColor: Colors.grey.withOpacity(0.3),
-            progressBarColor: Colors.blue,
+            progressBarColor: Colors.blue.withOpacity(0.5),
             bufferedBarColor: Colors.grey.withOpacity(0.3),
             thumbColor: Colors.deepPurple,
-            thumbGlowColor: Colors.blueGrey.withOpacity(0.3),
+            thumbGlowColor: Colors.blue.withOpacity(0.3),
             thumbRadius: 10.0,
           );
         });
@@ -225,8 +219,8 @@ class _NowPlayingPageState extends State<NowPlayingPage>
           _pauseAnim();
           return Container(
             margin: const EdgeInsets.all(8),
-            width: 48,
-            height: 48,
+            width: 60,
+            height: 60,
             child: const CircularProgressIndicator(),
           );
         } else if (playing != true) {
@@ -235,9 +229,9 @@ class _NowPlayingPageState extends State<NowPlayingPage>
                 // start or resume animation
                 _audioPlayerManager.player.play();
               },
-              icon: Icons.play_arrow,
+              icon: Icons.play_circle_outline,
               color: Colors.deepPurple,
-              size: 48);
+              size: 60);
         } else if (processingState != ProcessingState.completed) {
           _playAnim();
           return MediaButtonControl(
@@ -245,9 +239,9 @@ class _NowPlayingPageState extends State<NowPlayingPage>
                 _audioPlayerManager.player.pause();
                 _pauseAnim();
               },
-              icon: Icons.pause,
+              icon: Icons.pause_circle_outline,
               color: Colors.deepPurple,
-              size: 48);
+              size: 60);
         } else {
           if (processingState == ProcessingState.completed) {
             _stopAnim();
@@ -258,9 +252,9 @@ class _NowPlayingPageState extends State<NowPlayingPage>
                 _resetAnim();
                 _audioPlayerManager.player.seek(Duration.zero);
               },
-              icon: Icons.replay,
-              color: null,
-              size: 48);
+              icon: Icons.replay_circle_filled,
+              color: Colors.deepPurple,
+              size: 60);
         }
       },
     );
@@ -398,7 +392,7 @@ class _MediaButtonControlState extends State<MediaButtonControl> {
       onPressed: widget.function,
       icon: Icon(widget.icon),
       iconSize: widget.size,
-      color: widget.color ?? Theme.of(context).colorScheme.primary,
+      color: widget.color ?? Colors.deepPurple,
     );
   }
 }

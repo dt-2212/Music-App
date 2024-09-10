@@ -44,7 +44,7 @@ class _AppState extends State<App> {
           elevation: 0,
           currentIndex: currentPageIndex,
           selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.black54,
+          unselectedItemColor: Colors.white38,
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),

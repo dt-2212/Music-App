@@ -33,6 +33,11 @@ class _HomeTabState extends State<HomeTab> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(
+        title: const Text('Danh sách bài hát',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+        actions: const [Icon(Icons.search), Padding(padding: EdgeInsets.only(right: 20))],
+      ),
       body: getBody(),
     ));
   }
@@ -40,16 +45,10 @@ class _HomeTabState extends State<HomeTab> {
   Widget getBody() {
     bool showLoading = songs.isEmpty;
     if (showLoading) {
-      return getProgressBar();
+      return const Center(child: CircularProgressIndicator());
     } else {
       return getListView();
     }
-  }
-
-  Widget getProgressBar() {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
   }
 
   Widget getListView() {
@@ -96,7 +95,6 @@ class _HomeTabState extends State<HomeTab> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      const Text('Modal Bottom Sheet'),
                       ElevatedButton(
                         onPressed: () => Navigator.pop(context),
                         child: const Text('Close Bottom Sheet'),
@@ -110,10 +108,7 @@ class _HomeTabState extends State<HomeTab> {
 
   void navigate(Song song) {
     Navigator.push(context, CupertinoPageRoute(builder: (context) {
-      return NowPlaying(
-        songs: songs,
-        playingSong: song,
-      );
+      return NowPlaying(songs: songs, playingSong: song);
     }));
   }
 }
@@ -132,7 +127,7 @@ class _SongItemSection extends StatelessWidget {
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 24, right: 8),
       leading: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(10),
         child: FadeInImage.assetNetwork(
             placeholder: 'assets/music.png',
             width: 48,
@@ -146,17 +141,17 @@ class _SongItemSection extends StatelessWidget {
               );
             }),
       ),
-      title: Text(song.title),
-      subtitle: Text(song.artist),
-      trailing: IconButton(
-        icon: const Icon(Icons.more_horiz),
-        onPressed: () {
-          parent.showBottomSheet();
-        },
-      ),
+      title: Text(song.title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      subtitle: Text(song.artist, style: const TextStyle(fontSize: 14)),
       onTap: () {
         parent.navigate(song);
       },
+      trailing: IconButton(
+          icon: const Icon(Icons.more_horiz),
+          onPressed: () {
+            parent.showBottomSheet();
+          }),
     );
   }
 }
