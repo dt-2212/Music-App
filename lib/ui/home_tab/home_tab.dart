@@ -36,7 +36,8 @@ class _HomeTabState extends State<HomeTab> {
       appBar: AppBar(
         title: const Text('Danh sách bài hát',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
-        actions: const [Icon(Icons.search), Padding(padding: EdgeInsets.only(right: 20))],
+        backgroundColor: Colors.white,
+        actions: const [Icon(Icons.search), SizedBox(width: 20)],
       ),
       body: getBody(),
     ));

@@ -13,7 +13,7 @@ class MusicApp extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: appRouter(),
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigoAccent),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
